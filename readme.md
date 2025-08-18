@@ -107,45 +107,8 @@ Implementar o processo de autenticação na API, de maneira Stateless, utilizand
   
 ## Aula 04 JSON Web Token
 
-- Implementação do método de listagem de Médicos, paginada e ordenada por nome.
-- Cria-se o DTO ListagemMedico para devolver dados controlados ao controller de listagem
-- Pode ter uma unica URL chamada por diferentes métodos HTTP
-- Deve-se sempre utilizar DTO's para dados que chegam e saem da API.
-- https://cursos.alura.com.br/course/spring-boot-3-desenvolva-api-rest-java/task/116068
-- Paginação
-  - Limitar a requisição de registros visando performance.
-  - Se usa a interface Page, a qual é retornada pelo método listar, que passa a receber 
-    Pageable paginacao. Dessa forma, ao buscar findAll, não é mais necessário usar o stream anterior.
-  O método fica com essa cara:
-  - @GetMapping("/listar")
-    public Page<ListagemMedico> listar(Pageable paginacao){
-    return medicoRepository.findAll(paginacao).map(m -> new ListagemMedico(m));
-    }
-  - Era: 
-  - @GetMapping("/listar")
-    public List<ListagemMedico> listar(){
-    return medicoRepository.findAll().stream().map(m -> new ListagemMedico(m))
-    .collect(Collectors.toList());
-    }
-  - O front-end usa isso através do endereço de requisição:
-    localhost:8080/medicos/listar?size=1&page=1
-    size e page tem funções, precisa pesquisar. Mas basicamente, agora você retorna
-    um objeto Page, com novos campos no JSON de retorno indicando sobre essa paginação.
-  
-- Ordenação
-  - Através de sort dentro da url
-  - localhost:8080/medicos/listar?sort=crm ou localhost:8080/medicos/listar?sort=name
-  - A ordenação pode ir de asc ou desc 
-    - localhost:8080/medicos/listar?sort=crm,dsc
-  - Pode-se combinar ordenação e paginação. 
-  - Ademais, pode usar a notação @PageableDefault(siz =10, page =0, sort= {"name"})
-    para enviar diretamente uma organização dos dados:
-  - https://cursos.alura.com.br/course/spring-boot-3-desenvolva-api-rest-java/task/116069
-- Nesta aula:
-- Utilizar a anotação @GetMapping para mapear métodos em Controllers que produzem dados;
-  Utilizar a interface Pageable do Spring para realizar consultas com paginação;
-  Controlar a paginação e a ordenação dos dados devolvidos pela API com os parâmetros page, size e sort;
-  Configurar o projeto para que os comandos SQL sejam exibidos no console.
+- Aula 4 - Video 5 - Uso da variavel de ambiente para secret. 
+
 
 ## Aula 05
 - Requisições PUT
