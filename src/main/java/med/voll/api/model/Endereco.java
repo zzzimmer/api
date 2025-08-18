@@ -32,5 +32,34 @@ public class Endereco {
         this.cep = endereco.cep();
     }
 
+    public void atualizarInformacoes(EnderecoDTO endereco) {
+        // Verifica se o DTO não é nulo para evitar NullPointerException
+        if (endereco != null) {
+            // Atualiza os campos do objeto Endereco atual com os valores do DTO
+            // A lógica aqui é permitir atualizações parciais,
+            // ou seja, só atualiza o campo se um novo valor foi enviado no DTO.
+            if (endereco.logradouro() != null) {
+                this.logradouro = endereco.logradouro();
+            }
+            if (endereco.numero() != null) {
+                this.numero = endereco.numero();
+            }
+            if (endereco.complemento() != null) {
+                this.complemento = endereco.complemento();
+            }
+            if (endereco.bairro() != null) {
+                this.bairro = endereco.bairro();
+            }
+            if (endereco.cidade() != null) {
+                this.cidade = endereco.cidade();
+            }
+            if (endereco.uf() != null) {
+                this.uf = endereco.uf();
+            }
+            if (endereco.cep() != null) {
+                this.cep = endereco.cep();
+            }
+        }
+    }
 
 }
