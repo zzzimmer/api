@@ -107,42 +107,33 @@ Implementar o processo de autenticação na API, de maneira Stateless, utilizand
   
 ## Aula 04 JSON Web Token
 
-- Aula 4 - Video 5 - Uso da variavel de ambiente para secret. 
+- Aula 4 - Video 5 - Uso da variavel de ambiente para secret.
+  Para aprimorar a segurança da aplicação, integramos uma biblioteca externa dedicada à geração e ao gerenciamento de 
+tokens de autenticação. Toda a nova lógica foi centralizada no pacote infra.security, que agora contém as classes 
+responsáveis pela estratégia de geração de tokens, a configuração do encoder e o DTO para o tráfego dos dados de 
+acesso. A fim de suportar esta nova funcionalidade, também foi criada uma migration para o banco de dados. Por fim, 
+desenvolvemos o novo endpoint de login, que consome toda essa infraestrutura para validar as credenciais do usuário e
+associá-lo a um token de acesso.
 
 
 ## Aula 05
-- Requisições PUT
-- O Figma pode ajudar a visualizar os requisitos do sistema para a implementação
-- Em geral, é necessário devolver o id nas listagens para usar. 
-- Deve-se utilizar um DTO adequado para o PUT, visto as restrições de negócio
-- Para o seguinte metodo:
-- @PutMapping //usar url padrao
-  @Transactional
-  public void atualizar (@RequestBody @Valid AtualizarMedico json){
-  var medico = medicoRepository.getReferenceById(json.id());
-  medico.atualizarInformacoes(json);
-  }
-- Observar que os métodos atualizarInformações (Dentro da classe tem outro) é que mexem nos dados vindos
-do JSON. O Repository apenas faz um "get" do Objeto selecionado. 
-- https://cursos.alura.com.br/course/spring-boot-3-desenvolva-api-rest-java/task/116073
-- https://cursos.alura.com.br/course/spring-boot-3-desenvolva-api-rest-java/task/116074
-  
+- Criar uma classe que intercepta as requisições antes delas chegarem ao MedicoController. Um *filter*
+para todas as requisições
+-  Para tal, utilizamos a classe que recebe todas as requisicoes no spring, a DispatcherServlet
+- ![Captura de Tela 2025-08-18 às 18.04.51.png](../../../../var/folders/kj/9kfynl_12_9628kh01p7nz5w0000gn/T/TemporaryItems/NSIRD_screencaptureui_FUwXHv/Captura%20de%20Tela%202025-08-18%20%C3%A0s%2018.04.51.png)
+- Deve-se criar um filter ou um interceptor
+- https://cursos.alura.com.br/course/spring-boot-aplique-boas-praticas-proteja-api-rest/task/117194
+- Desta forma, filtrar requisições:
+  - O filtro é uma classe com componentes e herança.
+  - @Component
+    public class SecurityFilter extends OncePerRequestFilter {
 
-- Delete - Exclusão lógica e Exclusão real
-  - A exclusão no front vai e listagem -> registro -> desativar perfil. Ou seja, é uma exclusao logica
-  - Para a exclusao tradicional:
-    -  @DeleteMapping("/{id}")
-       @Transactional
-       public void excluir (@PathVariable Long id){
-       medicoRepository.deleteById(id);
-       }
-  - A exclusão necessita de uma nova migration na tabela, a qual
-  adiciona uma coluna que referencia status de ativo do médico, um
-  tinyInt. 
-  No projeto, é a migration V3. 
-  - Tem-se um novo listagem:
-  - @GetMapping("/listar")
-    public Page<ListagemMedico> listar(@PageableDefault(size = 10, sort ={"nome"} ) Pageable paginacao){
-    return medicoRepository.findAllByAtivoTrue(paginacao).map(m -> new ListagemMedico(m));
+    @Override
+    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain) throws ServletException, IOException {
+    filterChain.doFilter(request, response);
     }
-  - https://cursos.alura.com.br/course/spring-boot-3-desenvolva-api-rest-java/task/153864
+    }
+  - Esse filtro precisa ter uma logica implementada. Este, é chamado a cada request, como diz ali no extends
+- A logica interna:
+  - Essa logica vai no cabeçalho authorization. 
+  - Deve-se fazer uma validação se o Token foi gerado dentro dessa API mesmo
